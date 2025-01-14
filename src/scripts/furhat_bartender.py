@@ -140,7 +140,7 @@ class EmotionalFurhatBartender:
         """Main bartender interaction loop"""
         try:
             # Initial greeting
-            time.sleep(2)  # Give Furhat time to initialize
+            time.sleep(10)  # Give Furhat time to initialize
             self.speak("Welcome! I'll be your bartender tonight.")
 
             # Get customer's name
@@ -153,11 +153,19 @@ class EmotionalFurhatBartender:
 
             # Main interaction loop
             context = f"Speaking with customer named {name}."
+            # Get current emotional state
             detected_emotion = self.emotion_service.get_current_emotion()
             print(f"current emotion:{detected_emotion}")
 
+            # Update gesture based on emotion
+            self.gesture_for_emotion(detected_emotion)
+
+            self.speak(self.get_emotional_response(detected_emotion))
+
+            # Listen for customer input
+            self.speak("What can I get you?")
+
             while True:
-                time.sleep(3)
                 # Get current emotional state
                 detected_emotion = self.emotion_service.get_current_emotion()
                 print(f"current emotion:{detected_emotion}")
@@ -165,10 +173,9 @@ class EmotionalFurhatBartender:
                 # Update gesture based on emotion
                 self.gesture_for_emotion(detected_emotion)
 
-                self.speak(self.get_emotional_response(detected_emotion))
+                if random.random() < 0.5:
+                    self.speak(self.get_emotional_response(detected_emotion))
 
-                # Listen for customer input
-                self.speak("What can I get you?")
                 user_input = self.listen()
 
                 if not user_input:
